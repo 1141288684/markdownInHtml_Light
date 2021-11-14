@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>MarkDownReader</title>
+		<style>
+			pre{
+				background-color: #BDBDBD;font-size: 20px;
+			}
+			tr{
+				font-size: 30;
+			}
+			td{
+				font-size: 30;
+			}
+			.main_left{
+				width: 150px;
+				height: 100%;
+				float:left;
+				background:#c0c0c0;
+			}
+		</style>
+		
+		<script>
+			var txt = '';
+			function getA(s){
+				return '<div><a href="#'+s+'">'+s+'</a></div>';
+			}
+			
+		</script>
+		<script>
+			Array.prototype.remove = function(val) {
+			var index = this.indexOf(val);
+			if (index > -1) {
+			this.splice(index, 1);
+			}
+			};
+			function get(){
+				// var h5head = '<html><head><meta charset="utf-8"><title>MarkDownReader</title><style>' +
+				//          'pre{background-color: #BDBDBD;font-size: 20;' +
+				//          '}tr{font-size: 30;}td{font-size: 30;}.main_left{width: 150px;height: 100%;float:left;background:#c0c0c0;}'+
+				// 		 '</style></head><body><div class="main_left">';
+				var h5head = '<div class="main_left">' 
+				var h5head2 = '</div><div>';
+				
+				// var h5foot = '</div></body></html>';
+				var h5foot = '</div>';
+				var h2s = new Array();
+				var iscode = 0;
+				var isTable = 0;
+				var html = '';
+				var lines = document.getElementById("content").value.split("\n");
+				var s;
+				for( var i = 0;i<lines.length;i++){
+					var a = lines[i];
+					if(a.indexOf("######")==0){
+						s = '<h6 align="center">' + a.split('######')[1] + '</h6>';
+					}else if(a.indexOf("#####")==0){
+						s = '<h5 align="center">' + a.split('#####')[1] + '</h5>';
+					}else if(a.indexOf("####")==0){
+						s = '<h4 align="center">' + a.split('####')[1] + '</h4>';
+					}else if(a.indexOf("###")==0){
+						s = '<h3 align="center">' + a.split('###')[1] + '</h3>';
+					}else if(a.indexOf("##")==0){
+						var h2 = a.split('##')[1];
+						s = '<h2 align="center" id="' + h2 + '">'+ h2 +'</h2>';
+						h2s.push(h2);
+					}else if(a.indexOf("#")==0){
+						s = '<h1 align="center">' + a.split('#')[1] + '</h1>';
+					}else if(a.indexOf("|")!=-1){
+						if(isTable==0){
+							html = html + "<div align='center'><table><tbody bgcolor='#BDBDBD'>";
+							s = '<tr>';
+							isTable = 1;
+						}else{
+							s = '<tr bgcolor="antiquewhite">';
+						}
+						if(a.indexOf(":-")!=-1){
+							continue;
+						}
+						// a = a.replace(/\s*/g,"");
+						var al = a.split("|");
+						// al.remove("");
+						var ar = '<td>';
+						for(var k=1;k<al.length;k++){
+							ar = ar + al[k] + '</td>' + '<td>';
+						}
+						ar = ar + '</td>';
+						ar = ar.substring(0, ar.lastIndexOf("<td></td>"));
+						ar = ar.substring(0, ar.lastIndexOf("<td></td>"));
+						s = s + ar + '</tr>';
+						if(isTable==1&&lines[i+1].indexOf("|")==-1){
+							s = s + '</tbody></table></div>';
+							isTable = 0;
+						}
+					}else if(a.indexOf("```")!=-1){
+						a = a.replace('```', '');
+						if (iscode != 2){
+							s = '<div style="overflow-x:auto;background-color:#BDBDBD;font: bold;"><code><pre>' + a+'\n';
+							iscode = 2;
+						}else{
+							s = a + '</pre></code></div>';
+							iscode = 0;
+						}
+						
+					}else if(a.indexOf("![")!=-1&&a.indexOf("](")!=-1){
+						var t = a.split("](")[1];
+						t = t.substring(0,t.lastIndexOf(")"));
+						var filename = t.substring(t.lastIndexOf("\\")+1,t.length);
+						s = '<p align="center">'+filename+'</p><p align="center"><img src="'+t+'"</img></p>'
+					}else{
+						a = a.replace('#####', '');
+						if (iscode == 2){
+							s = a+'\n';
+						}
+						else{
+							s = '<p align="center">' + a + '</p>';
+						}
+					}
+					html = html + s;
+				}
+				var temp = ''
+				for(var k2 = 0;k2<h2s.length;k2++){
+					temp = temp + getA(h2s[k2]);
+				}
+				html = h5head+temp+h5head2+html+h5foot;
+				// var iframe = document.getElementById("ifram");
+				// var iframedoc = iframe.contentDocument || iframe.contentWindow.document;
+				// iframedoc.body.innerHTML = html;
+				txt = html;
+				document.getElementById("div_if").innerHTML = html;
+				// iframedoc.write(html);
+				// var iframe = document.createElement("iframe");
+				// iframe.width = "100%";
+				// iframe.height = "100%";
+				// iframe.contentWindow.document.open();
+				// iframe.contentWindow.document.write(html);
+				// iframe.src = 'data:text/html;charset=utf-8,'+encodeURI(html);
+				// document.getElementById("div_if").appendChild(iframe);
+			}
+			
+			
+		
+		</script>
+		<style>
+			pre{
+				background-color: #BDBDBD;
+			}
+			tr{font-size: 20px;}
+			td{font-size: 20px;}
+			
+		</style>
+		
+	</head>
+	<body>
+		<script type="text/javascript">
+		// var int=self.setInterval("clock()",500);
+		document.onkeyup = function(){
+			if(document.getElementById("content").value==txt){
+				return;
+			}else{
+				if(event.key=='|'){
+					insertAtCursor(document.getElementById("content"), '  |');
+				}
+				get();
+			}
+		}
+		// function clock()
+		// {
+			
+		// }
+		</script>
+		<script type="text/javascript">
+		  function contentS(){
+		    document.getElementById("content").scrollTop=1;
+			document.getElementById("div_if").scrollTop=1;
+		  }
+		</script>
+		<script type="text/javascript">    
+			function saveas(){  
+				var element = document.createElement('a');
+				element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(document.getElementById("content").value));
+				element.setAttribute('download', 'readme.md');
+				 
+				element.click();
+				
+			}        
+		</script>
+		<script type="text/javascript">     
+		    function insertAtCursor(myField, myValue) {
+		            if (document.selection) {
+		                //IE support
+		                myField.focus();
+		                sel = document.selection.createRange();
+		                sel.text = myValue;
+		                sel.select();
+		            } else if (myField.selectionStart || myField.selectionStart == '0') {
+		                //MOZILLA/NETSCAPE support
+		                var startPos = myField.selectionStart;
+		                var endPos = myField.selectionEnd;
+		                var beforeValue = myField.value.substring(0, startPos);
+		                var afterValue = myField.value.substring(endPos, myField.value.length);
+		    
+		                myField.value = beforeValue + myValue + afterValue;
+		    
+		                myField.selectionStart = startPos + myValue.length-2;
+		                myField.selectionEnd = startPos + myValue.length-2;
+		                myField.focus();
+		            } else {
+		                myField.value += myValue;
+		                myField.focus();
+		            }
+		        }
+		</script>  
+		<div id="inner" style="height: 100%;">
+			<div style="width: 48%;float: left;">
+				<textarea id="content" style="width:100%;height: 600px;font-size: 20px;background-color: #BDBDBD;color: #FFFFFF;font-weight: bold;"></textarea>
+			</div>
+			
+			<div style="width: 50%;float: right;height: 600px;overflow-y: auto;" id="div_if">
+				<!-- <iframe width="100%" height="100%" id="ifram"></iframe> -->
+			</div>
+			<button onclick="contentS()">回到顶部</button>
+			<button onclick="saveas()">保存到本地</button>
+		</div>
+		
+		
+		
+	</body>
+</html>
