@@ -184,7 +184,17 @@
 				 
 				element.click();
 				
-			}        
+			}
+			function saveAsHtml(){
+				var element = document.createElement('a');
+				var he = '<html><head><style>pre{background-color: #BDBDBD;font-size: 20px;}tr{font-size: 30;}td{font-size: 30;}.main_left{'+
+				'width: 150px;height: 100%;float:left;background:#c0c0c0;}</style></head><body>';
+				var fo = '</body></html>'
+				element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(he+document.getElementById("div_if").innerHTML+fo));
+				element.setAttribute('download', 'markdown.html');
+				 
+				element.click();
+			}
 		</script>
 		<script type="text/javascript">     
 		    function insertAtCursor(myField, myValue) {
@@ -222,6 +232,7 @@
 			</div>
 			<button onclick="contentS()">回到顶部</button>
 			<button onclick="saveas()">保存到本地</button>
+			<button onclick="saveAsHtml()">保存html</button>
 		</div>
 		
 		
