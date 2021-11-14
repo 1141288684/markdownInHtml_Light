@@ -23,12 +23,27 @@
 		
 		<script>
 			var txt = '';
+			var len = 0;
 			function getA(s){
 				return '<div><a href="#'+s+'">'+s+'</a></div>';
 			}
 			
 		</script>
 		<script>
+			function searchSubStr(str,  subStr){
+				var positions = [];
+			    var pos = str.indexOf(subStr);
+			
+			    while(pos>-1){
+			
+			        positions.push(pos);
+			
+			        pos = str.indexOf(subStr,  pos+1);
+			
+			    }
+				return positions.length;
+			}
+			
 			Array.prototype.remove = function(val) {
 			var index = this.indexOf(val);
 			if (index > -1) {
@@ -51,8 +66,9 @@
 				var html = '';
 				var lines = document.getElementById("content").value.split("\n");
 				var s;
+				
 				for( var i = 0;i<lines.length;i++){
-					var a = lines[i];
+					var a = lines[i].trim();
 					if(a.indexOf("###### ")==0){
 						s = '<h6 align="center">' + a.split('###### ')[1] + '</h6>';
 					}else if(a.indexOf("##### ")==0){
@@ -68,6 +84,7 @@
 					}else if(a.indexOf("# ")==0){
 						s = '<h1 align="center">' + a.split('# ')[1] + '</h1>';
 					}else if(a.indexOf("|")!=-1){
+						
 						if(isTable==0){
 							html = html + "<div align='center' style='table-layout: fixed;display: flex;'><table style='flex-grow: 1;'><tbody bgcolor='#BDBDBD'>";
 							s = '<tr>';
@@ -75,23 +92,34 @@
 						}else{
 							s = '<tr bgcolor="antiquewhite">';
 						}
-						if(a.indexOf(":-")!=-1){
-							continue;
+						if(lines[i+1].indexOf(":-")!=-1){
+							len = searchSubStr(lines[i+1],': |');
+							console.log(len);
 						}
+						if(a.indexOf('| :-')!=-1){continue;}
 						// a = a.replace(/\s*/g,"");
 						var al = a.split("|");
 						// al.remove("");
 						var ar = '<td>';
-						for(var k=1;k<al.length;k++){
+						// for(var k=1;k<al.length;k++){
+						// 	ar = ar + al[k] + '</td>' + '<td>';
+						// }
+						console.log(al);
+						for(var k=1;k<=len;k++){
+							
 							ar = ar + al[k] + '</td>' + '<td>';
+							
 						}
 						ar = ar + '</td>';
+						// console.log(ar);
+						// ar = ar.substring(0, ar.lastIndexOf("<td></td>"));
 						ar = ar.substring(0, ar.lastIndexOf("<td></td>"));
-						ar = ar.substring(0, ar.lastIndexOf("<td></td>"));
+						console.log(ar);
 						s = s + ar + '</tr>';
 						if(isTable==1&&lines[i+1].indexOf("|")==-1){
 							s = s + '</tbody></table></div>';
 							isTable = 0;
+							len = 0;
 						}
 					}else if(a.indexOf("```")!=-1){
 						a = a.replace('```', '');
