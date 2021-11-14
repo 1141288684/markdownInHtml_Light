@@ -69,7 +69,7 @@
 						s = '<h1 align="center">' + a.split('# ')[1] + '</h1>';
 					}else if(a.indexOf("|")!=-1){
 						if(isTable==0){
-							html = html + "<div align='center'><table><tbody bgcolor='#BDBDBD'>";
+							html = html + "<div align='center' style='table-layout: fixed;display: flex;'><table style='flex-grow: 1;'><tbody bgcolor='#BDBDBD'>";
 							s = '<tr>';
 							isTable = 1;
 						}else{
