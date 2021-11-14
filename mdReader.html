@@ -53,20 +53,20 @@
 				var s;
 				for( var i = 0;i<lines.length;i++){
 					var a = lines[i];
-					if(a.indexOf("######")==0){
-						s = '<h6 align="center">' + a.split('######')[1] + '</h6>';
-					}else if(a.indexOf("#####")==0){
-						s = '<h5 align="center">' + a.split('#####')[1] + '</h5>';
-					}else if(a.indexOf("####")==0){
-						s = '<h4 align="center">' + a.split('####')[1] + '</h4>';
-					}else if(a.indexOf("###")==0){
-						s = '<h3 align="center">' + a.split('###')[1] + '</h3>';
-					}else if(a.indexOf("##")==0){
-						var h2 = a.split('##')[1];
+					if(a.indexOf("###### ")==0){
+						s = '<h6 align="center">' + a.split('###### ')[1] + '</h6>';
+					}else if(a.indexOf("##### ")==0){
+						s = '<h5 align="center">' + a.split('##### ')[1] + '</h5>';
+					}else if(a.indexOf("#### ")==0){
+						s = '<h4 align="center">' + a.split('#### ')[1] + '</h4>';
+					}else if(a.indexOf("### ")==0){
+						s = '<h3 align="center">' + a.split('### ')[1] + '</h3>';
+					}else if(a.indexOf("## ")==0){
+						var h2 = a.split('## ')[1];
 						s = '<h2 align="center" id="' + h2 + '">'+ h2 +'</h2>';
 						h2s.push(h2);
-					}else if(a.indexOf("#")==0){
-						s = '<h1 align="center">' + a.split('#')[1] + '</h1>';
+					}else if(a.indexOf("# ")==0){
+						s = '<h1 align="center">' + a.split('# ')[1] + '</h1>';
 					}else if(a.indexOf("|")!=-1){
 						if(isTable==0){
 							html = html + "<div align='center'><table><tbody bgcolor='#BDBDBD'>";
